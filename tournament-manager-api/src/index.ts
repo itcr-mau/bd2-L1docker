@@ -79,6 +79,15 @@ const tournamentSchema = new Schema(
 
 const Tournament = model("Tournament", tournamentSchema);
 
+// Health check endpoint
+app.get('/', (req, res) => {
+  res.status(200).json({
+    status: 'ok',
+    service: 'tournament-manager-api',
+    timestamp: new Date().toISOString()
+  });
+});
+
 // POST /registrar endpoint
 app.post('/registrar', async (req, res) => {
   try {
