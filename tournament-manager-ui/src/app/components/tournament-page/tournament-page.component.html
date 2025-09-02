@@ -1,6 +1,28 @@
-<h1>Torneo 2025</h1>
+<h1>Tournament Manager 2025</h1>
 
+<!-- Registered Tournaments Section -->
+@if (registeredTournaments.length > 0) {
+<div class="registered-tournaments">
+    <h2>Registered Tournaments</h2>
+    <div class="tournament-cards">
+        @for (tournament of registeredTournaments; track tournament._id) {
+        <div class="tournament-card">
+            <h3>{{ tournament.title }}</h3>
+            <div class="tournament-details">
+                <p><strong>Type:</strong> {{ tournament.type }}</p>
+                <p><strong>Category:</strong> {{ tournament.category }}</p>
+                <p><strong>Location:</strong> {{ tournament.location }}</p>
+                <p><strong>Date:</strong> {{ tournament.date | date:'medium' }}</p>
+            </div>
+        </div>
+        }
+    </div>
+</div>
+}
+
+<!-- Brackets Section -->
 @if (loadedData.length > 0) {
+    <h2>Tournament Brackets</h2>
     @for (item of loadedData; track $index) {
     <div class="brackets-container">
         <app-stage-viewer [bracketsId]="'tournament-' + $index" [stageData]="item"></app-stage-viewer>

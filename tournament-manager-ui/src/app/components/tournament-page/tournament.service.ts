@@ -13,4 +13,9 @@ export class TournamentService {
     const url = `http://localhost:3000/fetch-tournaments`;
     return this._http.get<any[]>(url);
   }
+
+  public loadRegisteredTournaments(): Observable<any> {
+    const url = `http://localhost:3000/fetch-registros`;
+    return this._http.get<any[]>(url);
+  }
 }

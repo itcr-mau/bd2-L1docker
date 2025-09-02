@@ -1,8 +1,8 @@
 import { AfterViewInit, Component, Input } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { BracketsManager } from 'brackets-manager';
 import { InMemoryDatabase } from 'brackets-memory-db';
 import dataset from '../../data';
-// import dataset, { katas } from '../../data';
 
 import { StageViewerComponent } from './stage-viewer/stage-viewer.component';
 import { TournamentService } from './tournament.service';
@@ -14,7 +14,7 @@ function getNearestPowerOfTwo(input: number): number {
 @Component({
   selector: 'app-tournament-page',
   standalone: true,
-  imports: [StageViewerComponent],
+  imports: [StageViewerComponent, DatePipe],
   templateUrl: './tournament-page.component.html',
   styleUrl: './tournament-page.component.scss'
 })
@@ -25,9 +25,9 @@ export class TournamentPageComponent implements AfterViewInit {
   public emptyBrackets: any = dataset.filter(x => x.roster.length === 0);
   public smallBrackets: any = dataset.filter(x => x.roster.length <= 4 && x.roster.length === 1);
   public allDojos = new Set<string>(this.dataset.map((x: any) => x.roster.map((y: any) => this.getDojoName(y.name))).flat(Infinity));
-  // public katas = katas;
   @Input('tournamentId') public tournamentId: string = 'tournament-1';
   public loadedData: any[] = [];
+  public registeredTournaments: any[] = [];
 
   public constructor(
     private readonly _tournamentService: TournamentService,
@@ -103,11 +103,21 @@ export class TournamentPageComponent implements AfterViewInit {
         console.log('Data loaded from service:', data);
         this.loadedData = await this.loadBrackets(data.filter(x => x.roster.length > 1));
       },
-      error: (error) => {
+      error: (error: any) => {
         console.error('Error loading data:', error);
       }
     });
-    // this.loadedData = await this.loadBrackets(this.dataset);
+
+    // Load registered tournaments
+    this._tournamentService.loadRegisteredTournaments().subscribe({
+      next: (tournaments: any[]) => {
+        console.log('Registered tournaments loaded:', tournaments);
+        this.registeredTournaments = tournaments;
+      },
+      error: (error: any) => {
+        console.error('Error loading registered tournaments:', error);
+      }
+    });
   }
 
   public getDojoName(name: string): string {
