@@ -9,8 +9,11 @@ RUN npm install
 COPY . .
 RUN npm run build
 
-# Etapa final
+# Production stage
 FROM node:18-alpine
+
+# Install wget for healthcheck
+RUN apk add --no-cache wget
 
 WORKDIR /app
 
