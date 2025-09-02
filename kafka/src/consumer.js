@@ -39,37 +39,39 @@ async function runConsumer() {
           const messageKey = message.key?.toString();
           const timestamp = new Date().toISOString();
 
-          console.log('\n📨 Nuevo mensaje recibido:');
+          console.log('\n📨 New message received:');
           console.log(`   ⏰ Timestamp: ${timestamp}`);
           console.log(`   🏷️  Topic: ${topic}`);
           console.log(`   📂 Partition: ${partition}`);
           console.log(`   🔑 Key: ${messageKey}`);
           console.log(`   📄 Value: ${messageValue}`);
 
-          // Intentar parsear el JSON
+          // Parse JSON message
           try {
             const parsedMessage = JSON.parse(messageValue);
-            console.log('   📊 Mensaje parseado:');
+            console.log('   📊 Tournament data:');
             console.log(`      - ID: ${parsedMessage.id}`);
-            console.log(`      - Nombre: ${parsedMessage.nombre}`);
-            console.log(`      - Descripción: ${parsedMessage.descripcion}`);
-            console.log(`      - Tipo: ${parsedMessage.tipo}`);
-            console.log(`      - Timestamp Original: ${parsedMessage.timestamp}`);
+            console.log(`      - Title: ${parsedMessage.title}`);
+            console.log(`      - Type: ${parsedMessage.type}`);
+            console.log(`      - Category: ${parsedMessage.category}`);
+            console.log(`      - Location: ${parsedMessage.location}`);
+            console.log(`      - Date: ${parsedMessage.date}`);
+            console.log(`      - Original timestamp: ${parsedMessage.timestamp}`);
           } catch (parseError) {
-            console.log('   ⚠️  No se pudo parsear como JSON');
+            console.log('   ⚠️  Could not parse as JSON');
           }
 
-          console.log('   ✅ Mensaje procesado exitosamente\n');
+          console.log('   ✅ Tournament registration processed successfully\n');
           console.log('─'.repeat(60));
 
         } catch (error) {
-          console.error('❌ Error procesando mensaje:', error);
+          console.error('❌ Error processing message:', error);
         }
       },
     });
 
   } catch (error) {
-    console.error('❌ Error en el consumer:', error);
+    console.error('❌ Consumer error:', error);
     process.exit(1);
   }
 }
