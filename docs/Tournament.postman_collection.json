@@ -17,7 +17,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "[\n  {\n    \"title\": \"Senior Avanzados Hombres ✅\",\n    \"type\": \"single_elimination\",\n    \"roster\": [\n      {\n        \"id\": 93,\n        \"name\": \"93 - [Karate Patito] Juan Perez\",\n        \"weight\": 83,\n        \"age\": 45\n      },\n      {\n        \"id\": 94,\n        \"name\": \"94 - [Karate los pollitos] Pedro Picapiedra\",\n        \"weight\": 82,\n        \"age\": 44\n      }\n    ]\n  }\n]",
+					"raw": "[\n  {\n    \"title\": \"Juvenil Masculino Kata -16 años\",\n    \"type\": \"single_elimination\",\n    \"roster\": [\n      {\n        \"id\": 1,\n        \"name\": \"1 - [Dojo Sakura] Andrés Morales\",\n        \"weight\": 45,\n        \"age\": 15\n      },\n      {\n        \"id\": 2,\n        \"name\": \"2 - [Karate-Do San José] Luis Fernando Castro\",\n        \"weight\": 47,\n        \"age\": 14\n      },\n      {\n        \"id\": 3,\n        \"name\": \"3 - [Academia Dragon] Marco Rodríguez\",\n        \"weight\": 48,\n        \"age\": 16\n      },\n      {\n        \"id\": 4,\n        \"name\": \"4 - [Dojo Bushido] Carlos Méndez\",\n        \"weight\": 46,\n        \"age\": 15\n      }\n    ]\n  },\n  {\n    \"title\": \"Juvenil Femenino Kata -16 años\",\n    \"type\": \"single_elimination\",\n    \"roster\": [\n      {\n        \"id\": 5,\n        \"name\": \"5 - [Dojo Sakura] María Fernanda Gutiérrez\",\n        \"weight\": 42,\n        \"age\": 14\n      },\n      {\n        \"id\": 6,\n        \"name\": \"6 - [Karate-Do San José] Ana Sofía Vargas\",\n        \"weight\": 43,\n        \"age\": 15\n      },\n      {\n        \"id\": 7,\n        \"name\": \"7 - [Academia Dragon] Valeria Sánchez\",\n        \"weight\": 41,\n        \"age\": 16\n      }\n    ]\n  },\n  {\n    \"title\": \"Senior Masculino Kumite -75kg\",\n    \"type\": \"single_elimination\",\n    \"roster\": [\n      {\n        \"id\": 8,\n        \"name\": \"8 - [Dojo Tradicional] José Miguel Herrera\",\n        \"weight\": 72,\n        \"age\": 23\n      },\n      {\n        \"id\": 9,\n        \"name\": \"9 - [Karate Shotokan CR] Diego Alejandro Mora\",\n        \"weight\": 74,\n        \"age\": 25\n      },\n      {\n        \"id\": 10,\n        \"name\": \"10 - [Academia Samurai] Roberto Carlos Jiménez\",\n        \"weight\": 73,\n        \"age\": 27\n      },\n      {\n        \"id\": 11,\n        \"name\": \"11 - [Dojo Kyokushin] Fernando Alvarado\",\n        \"weight\": 71,\n        \"age\": 24\n      },\n      {\n        \"id\": 12,\n        \"name\": \"12 - [Karate-Do Cartago] Esteban Ramírez\",\n        \"weight\": 75,\n        \"age\": 26\n      },\n      {\n        \"id\": 13,\n        \"name\": \"13 - [Dojo Bushido] Mauricio González\",\n        \"weight\": 70,\n        \"age\": 28\n      }\n    ]\n  },\n  {\n    \"title\": \"Senior Femenino Kumite -61kg\",\n    \"type\": \"single_elimination\",\n    \"roster\": [\n      {\n        \"id\": 14,\n        \"name\": \"14 - [Dojo Sakura] Andrea Solís\",\n        \"weight\": 58,\n        \"age\": 22\n      },\n      {\n        \"id\": 15,\n        \"name\": \"15 - [Karate-Do San José] Gabriela Montero\",\n        \"weight\": 60,\n        \"age\": 24\n      },\n      {\n        \"id\": 16,\n        \"name\": \"16 - [Academia Dragon] Priscilla Vega\",\n        \"weight\": 59,\n        \"age\": 26\n      },\n      {\n        \"id\": 17,\n        \"name\": \"17 - [Dojo Tradicional] Melissa Chacón\",\n        \"weight\": 61,\n        \"age\": 23\n      }\n    ]\n  },\n  {\n    \"title\": \"Veteranos Masculino Kata +40 años\",\n    \"type\": \"single_elimination\",\n    \"roster\": [\n      {\n        \"id\": 18,\n        \"name\": \"18 - [Karate Shotokan CR] Juan Carlos Pérez\",\n        \"weight\": 78,\n        \"age\": 42\n      },\n      {\n        \"id\": 19,\n        \"name\": \"19 - [Academia Samurai] Pedro Pablo Rojas\",\n        \"weight\": 80,\n        \"age\": 45\n      },\n      {\n        \"id\": 20,\n        \"name\": \"20 - [Dojo Kyokushin] Miguel Ángel Torres\",\n        \"weight\": 82,\n        \"age\": 48\n      },\n      {\n        \"id\": 21,\n        \"name\": \"21 - [Karate-Do Cartago] Francisco Vargas\",\n        \"weight\": 79,\n        \"age\": 43\n      },\n      {\n        \"id\": 22,\n        \"name\": \"22 - [Dojo Bushido] Álvaro Zamora\",\n        \"weight\": 81,\n        \"age\": 46\n      }\n    ]\n  },\n  {\n    \"title\": \"Infantil Mixto Kata 8-10 años\",\n    \"type\": \"single_elimination\",\n    \"roster\": [\n      {\n        \"id\": 23,\n        \"name\": \"23 - [Dojo Sakura] Sebastián Martínez\",\n        \"weight\": 30,\n        \"age\": 9\n      },\n      {\n        \"id\": 24,\n        \"name\": \"24 - [Karate-Do San José] Isabella Fernández\",\n        \"weight\": 28,\n        \"age\": 8\n      },\n      {\n        \"id\": 25,\n        \"name\": \"25 - [Academia Dragon] Mateo Quesada\",\n        \"weight\": 32,\n        \"age\": 10\n      },\n      {\n        \"id\": 26,\n        \"name\": \"26 - [Dojo Tradicional] Sofía Calderón\",\n        \"weight\": 29,\n        \"age\": 9\n      },\n      {\n        \"id\": 27,\n        \"name\": \"27 - [Karate Shotokan CR] Tomás Villalobos\",\n        \"weight\": 31,\n        \"age\": 10\n      },\n      {\n        \"id\": 28,\n        \"name\": \"28 - [Academia Samurai] Camila Cordero\",\n        \"weight\": 27,\n        \"age\": 8\n      }\n    ]\n  },\n  {\n    \"title\": \"Senior Masculino Kumite +84kg\",\n    \"type\": \"single_elimination\",\n    \"roster\": [\n      {\n        \"id\": 29,\n        \"name\": \"29 - [Dojo Kyokushin] Alejandro Vindas\",\n        \"weight\": 87,\n        \"age\": 29\n      },\n      {\n        \"id\": 30,\n        \"name\": \"30 - [Karate-Do Cartago] Rodrigo Cascante\",\n        \"weight\": 89,\n        \"age\": 31\n      },\n      {\n        \"id\": 31,\n        \"name\": \"31 - [Dojo Bushido] Esteban Arrieta\",\n        \"weight\": 85,\n        \"age\": 28\n      },\n      {\n        \"id\": 32,\n        \"name\": \"32 - [Academia Dragon] Gustavo Elizondo\",\n        \"weight\": 90,\n        \"age\": 32\n      }\n    ]\n  },\n  {\n    \"title\": \"Senior Femenino Kata Absoluto\",\n    \"type\": \"single_elimination\",\n    \"roster\": [\n      {\n        \"id\": 33,\n        \"name\": \"33 - [Dojo Sakura] Laura Jiménez\",\n        \"weight\": 55,\n        \"age\": 25\n      },\n      {\n        \"id\": 34,\n        \"name\": \"34 - [Karate-Do San José] Carmen Badilla\",\n        \"weight\": 62,\n        \"age\": 27\n      },\n      {\n        \"id\": 35,\n        \"name\": \"35 - [Academia Samurai] Paola Méndez\",\n        \"weight\": 58,\n        \"age\": 24\n      },\n      {\n        \"id\": 36,\n        \"name\": \"36 - [Dojo Tradicional] Natalia Rojas\",\n        \"weight\": 60,\n        \"age\": 26\n      },\n      {\n        \"id\": 37,\n        \"name\": \"37 - [Karate Shotokan CR] Daniela Campos\",\n        \"weight\": 57,\n        \"age\": 23\n      }\n    ]\n  }\n]",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -32,6 +32,62 @@
 					"port": "3000",
 					"path": [
 						"upload-data"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Registrar Torneo (Kafka)",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"title\": \"Campeonato Nacional de Karate 2024\",\n  \"type\": \"torneo-nacional\",\n  \"category\": \"karate-kumite\",\n  \"location\": \"Gimnasio Nacional, San José\",\n  \"date\": \"2024-03-15T09:00:00.000Z\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/registrar",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"registrar"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Verificar Registros (MongoDB)",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/fetch-registros",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"fetch-registros"
 					]
 				}
 			},
