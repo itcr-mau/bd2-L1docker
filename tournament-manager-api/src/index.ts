@@ -1,9 +1,19 @@
 import express from "express";
 import mongoose, { model, Schema } from "mongoose";
+import { Kafka } from "kafkajs";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/tournament_designer';
+const KAFKA_BROKERS = process.env.KAFKA_BROKERS || 'localhost:9092';
+
+// Configurar Kafka
+const kafka = new Kafka({
+  clientId: 'tournament-api',
+  brokers: [KAFKA_BROKERS]
+});
+
+const producer = kafka.producer();
 
 app.use(express.json());
 
@@ -33,6 +43,23 @@ mongoose
   .then(() => console.log("✅ Conectado a MongoDB"))
   .catch((err) => console.error("❌ Error conectando a MongoDB:", err));
 
+// Conectar Kafka Producer
+producer.connect()
+  .then(() => console.log("✅ Conectado a Kafka Producer"))
+  .catch((err) => console.error("❌ Error conectando a Kafka:", err));
+
+// Schema para registros
+const registroSchema = new Schema(
+  {
+    nombre: { type: String, required: true },
+    descripcion: { type: String, required: true },
+    tipo: { type: String, required: false }
+  },
+  { timestamps: true }
+);
+
+const Registro = model("Registro", registroSchema);
+
 
 const tournamentSchema = new Schema(
   {
@@ -49,6 +76,64 @@ const tournamentSchema = new Schema(
 );
 
 const Tournament = model("Tournament", tournamentSchema);
+
+// POST /registrar endpoint
+app.post('/registrar', async (req, res) => {
+  try {
+    // 1. Validar datos de entrada
+    const { nombre, descripcion, tipo } = req.body;
+    
+    if (!nombre || !descripcion) {
+      return res.status(400).json({
+        success: false,
+        error: "Los campos 'nombre' y 'descripcion' son requeridos"
+      });
+    }
+
+    // 2. Insertar en MongoDB
+    const nuevoRegistro = new Registro({
+      nombre,
+      descripcion,
+      tipo: tipo || 'default'
+    });
+
+    const resultado = await nuevoRegistro.save();
+    console.log(`✅ Registro insertado en MongoDB:`, resultado._id);
+
+    // 3. Publicar mensaje en Kafka
+    const mensaje = {
+      id: resultado._id.toString(),
+      nombre,
+      descripcion,
+      tipo: tipo || 'default',
+      timestamp: new Date().toISOString()
+    };
+
+    await producer.send({
+      topic: 'registros',
+      messages: [{
+        key: resultado._id.toString(),
+        value: JSON.stringify(mensaje)
+      }]
+    });
+
+    console.log(`✅ Mensaje enviado a Kafka:`, mensaje);
+
+    // 4. Responder con 201 y el insertedId
+    res.status(201).json({
+      success: true,
+      insertedId: resultado._id,
+      message: "Registro creado y enviado a Kafka"
+    });
+
+  } catch (error) {
+    console.error("❌ Error en /registrar:", error);
+    res.status(500).json({
+      success: false,
+      error: "Error interno del servidor"
+    });
+  }
+});
 
 
 app.post('/upload-data', async (req, res) => {
@@ -71,4 +156,13 @@ app.get("/", (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
+});
+
+// Graceful shutdown
+process.on('SIGINT', async () => {
+  console.log('🔄 Cerrando conexiones...');
+  await producer.disconnect();
+  await mongoose.disconnect();
+  console.log('✅ Conexiones cerradas');
+  process.exit(0);
 });
