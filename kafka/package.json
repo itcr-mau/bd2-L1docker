@@ -1,0 +1,17 @@
+{
+  "name": "tournament-kafka-job",
+  "version": "1.0.0",
+  "description": "Job consumer para procesar mensajes de Kafka",
+  "main": "src/consumer.js",
+  "scripts": {
+    "start": "node src/consumer.js",
+    "dev": "node src/consumer.js"
+  },
+  "dependencies": {
+    "kafkajs": "^2.2.4",
+    "dotenv": "^16.4.5"
+  },
+  "keywords": ["kafka", "consumer", "job"],
+  "author": "",
+  "license": "ISC"
+}
