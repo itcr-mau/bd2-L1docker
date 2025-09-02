@@ -48,12 +48,14 @@ producer.connect()
   .then(() => console.log("✅ Conectado a Kafka Producer"))
   .catch((err) => console.error("❌ Error conectando a Kafka:", err));
 
-// Schema para registros
+// Schema para registros de torneos
 const registroSchema = new Schema(
   {
-    nombre: { type: String, required: true },
-    descripcion: { type: String, required: true },
-    tipo: { type: String, required: false }
+    title: { type: String, required: true },
+    type: { type: String, required: true },
+    category: { type: String, required: false },
+    location: { type: String, required: false },
+    date: { type: Date, required: false }
   },
   { timestamps: true }
 );
@@ -80,32 +82,35 @@ const Tournament = model("Tournament", tournamentSchema);
 // POST /registrar endpoint
 app.post('/registrar', async (req, res) => {
   try {
-    // 1. Validar datos de entrada
-    const { nombre, descripcion, tipo } = req.body;
+    const { title, type, category, location, date } = req.body;
     
-    if (!nombre || !descripcion) {
+    if (!title || !type) {
       return res.status(400).json({
         success: false,
-        error: "Los campos 'nombre' y 'descripcion' son requeridos"
+        error: "Fields 'title' and 'type' are required"
       });
     }
 
-    // 2. Insertar en MongoDB
+    // Save to MongoDB
     const nuevoRegistro = new Registro({
-      nombre,
-      descripcion,
-      tipo: tipo || 'default'
+      title,
+      type,
+      category: category || 'General',
+      location: location || 'TBD',
+      date: date ? new Date(date) : new Date()
     });
 
     const resultado = await nuevoRegistro.save();
-    console.log(`✅ Registro insertado en MongoDB:`, resultado._id);
+    console.log(`✅ Tournament registered in MongoDB:`, resultado._id);
 
-    // 3. Publicar mensaje en Kafka
+    // Send message to Kafka
     const mensaje = {
       id: resultado._id.toString(),
-      nombre,
-      descripcion,
-      tipo: tipo || 'default',
+      title,
+      type,
+      category: category || 'General',
+      location: location || 'TBD',
+      date: resultado.date ? resultado.date.toISOString() : new Date().toISOString(),
       timestamp: new Date().toISOString()
     };
 
@@ -117,20 +122,19 @@ app.post('/registrar', async (req, res) => {
       }]
     });
 
-    console.log(`✅ Mensaje enviado a Kafka:`, mensaje);
+    console.log(`✅ Message sent to Kafka:`, mensaje);
 
-    // 4. Responder con 201 y el insertedId
     res.status(201).json({
       success: true,
       insertedId: resultado._id,
-      message: "Registro creado y enviado a Kafka"
+      message: "Tournament registered and sent to Kafka"
     });
 
   } catch (error) {
-    console.error("❌ Error en /registrar:", error);
+    console.error("❌ Error in /registrar:", error);
     res.status(500).json({
       success: false,
-      error: "Error interno del servidor"
+      error: "Internal server error"
     });
   }
 });
@@ -148,6 +152,17 @@ app.post('/upload-data', async (req, res) => {
 app.get('/fetch-tournaments', async (req, res) => {
   const tournaments = await Tournament.find();
   res.status(200).json(tournaments);
+});
+
+// GET endpoint to fetch tournament registrations
+app.get('/fetch-registros', async (req, res) => {
+  try {
+    const registros = await Registro.find({ title: { $exists: true } }).sort({ createdAt: -1 });
+    res.json(registros);
+  } catch (error) {
+    console.error("Error fetching tournament registrations:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
 });
 
 app.get("/", (req, res) => {
