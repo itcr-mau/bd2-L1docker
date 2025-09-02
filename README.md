@@ -1,5 +1,7 @@
 # Taller BD2 Docker: Tournament Manager + Kafka
 
+**Repositorio**: https://github.com/itcr-mau/bd2-L1docker
+
 **Instituto Tecnológico de Costa Rica**  
 Campus Tecnológico Central Cartago  
 Escuela de Ingeniería en Computación  
@@ -12,12 +14,12 @@ Escuela de Ingeniería en Computación
 **Carné**: 2024143009  
 **Correo**: m.gonzalez.9@estudiantec.cr  
 
-Este taller implementa un sistema completo que incluye:
-- **UI Angular** (puerto 80)
-- **API NodeJS** (puerto 3000) 
-- **MongoDB** (puerto 27017)
-- **Kafka + Zookeeper** (puerto 9092)
-- **Job Consumer** para procesar mensajes
+Este taller implementa un sistema completo de gestión de torneos que incluye:
+- **UI Angular** (puerto 80) - Visualización de torneos
+- **API NodeJS** (puerto 3000) - Gestión de torneos y registros
+- **MongoDB** (puerto 27017) - Almacenamiento de datos
+- **Kafka + Zookeeper** (puerto 9092) - Sistema de mensajería
+- **Job Consumer** para procesar mensajes de registro
 
 ## Arquitectura
 
@@ -30,19 +32,31 @@ UI Angular → API NodeJS → MongoDB
 ## Servicios Implementados
 
 ### 1. API NodeJS
+- Endpoint `GET /` - Health check del servicio
 - Endpoint `POST /registrar` que:
-  - Inserta datos en MongoDB
+  - Registra torneos con información completa (título, tipo, categoría, ubicación, fecha)
+  - Inserta datos en MongoDB colección `registros`
   - Publica mensaje en Kafka tópico 'registros'
-  - Retorna `insertedId`
+  - Retorna `insertedId` y confirmación
+- Endpoint `GET /fetch-tournaments` - Obtiene todos los torneos
+- Endpoint `GET /fetch-registros` - Obtiene todos los registros
+- Endpoint `POST /upload-data` - Carga masiva de torneos
 
 ### 2. Job Consumer (Kafka)
 - Consume mensajes del tópico 'registros'
+- Procesa tanto formato nuevo (torneos) como legacy (personas)
 - Imprime cada mensaje en consola con formato estructurado
-- Maneja errores y reconexiones
+- Maneja errores y reconexiones automáticas
 
 ### 3. Base de Datos
-- MongoDB con colección `registros`
-- Schema: `{ nombre, descripcion, tipo, timestamps }`
+- MongoDB con dos colecciones:
+  - `tournaments`: Torneos con brackets completos
+  - `registros`: Registros de torneos con schema `{ title, type, category, location, date, timestamps }`
+
+### 4. UI Angular
+- Visualización de brackets de torneos
+- Interfaz para mostrar torneos registrados
+- Componentes reutilizables para diferentes tipos de competencias
 
 ## Comandos de Uso
 
@@ -67,7 +81,23 @@ docker compose logs -f kafka
 ```bash
 curl -X POST http://localhost:3000/registrar \
   -H "Content-Type: application/json" \
-  -d '{"nombre":"test","descripcion":"prueba","tipo":"demo"}'
+  -d '{
+    "title": "Campeonato Nacional de Karate 2024",
+    "type": "torneo-nacional", 
+    "category": "karate-kumite",
+    "location": "Gimnasio Nacional, San José",
+    "date": "2024-03-15T09:00:00.000Z"
+  }'
+```
+
+### Verificar registros de torneos
+```bash
+curl -s http://localhost:3000/fetch-registros | jq .
+```
+
+### Verificar health de la API
+```bash
+curl -s http://localhost:3000/ | jq .
 ```
 
 ### Verificar MongoDB
@@ -85,14 +115,16 @@ docker compose exec kafka kafka-topics --bootstrap-server localhost:9092 --list
 ## Endpoints de la API
 
 ### POST /registrar
-Crea un nuevo registro y lo envía a Kafka.
+Registra un nuevo torneo y lo envía a Kafka.
 
 **Request:**
 ```json
 {
-  "nombre": "string",      // requerido
-  "descripcion": "string", // requerido  
-  "tipo": "string"         // opcional
+  "title": "string",       // requerido - Nombre del torneo
+  "type": "string",        // requerido - Tipo de torneo  
+  "category": "string",    // opcional - Categoría (default: "General")
+  "location": "string",    // opcional - Ubicación (default: "TBD")
+  "date": "ISO_Date"       // opcional - Fecha del torneo
 }
 ```
 
@@ -101,26 +133,35 @@ Crea un nuevo registro y lo envía a Kafka.
 {
   "success": true,
   "insertedId": "ObjectId",
-  "message": "Registro creado y enviado a Kafka"
+  "message": "Torneo registrado y enviado a Kafka"
 }
 ```
 
 ### GET /
-Health check de la API
+Health check de la API - Retorna estado del servicio
 
 ### GET /fetch-tournaments
-Obtiene todos los torneos (funcionalidad existente)
+Obtiene todos los torneos de la colección tournaments
+
+### GET /fetch-registros  
+Obtiene todos los registros de torneos de la colección registros
 
 ### POST /upload-data
-Carga masiva de torneos (funcionalidad existente)
+Carga masiva de torneos con brackets completos
 
 ## Verificación del Flujo Completo
 
-1. **Enviar datos al endpoint:**
+1. **Registrar un torneo:**
    ```bash
    curl -X POST http://localhost:3000/registrar \
      -H "Content-Type: application/json" \
-     -d '{"nombre":"Juan Pérez","descripcion":"Registro de prueba","tipo":"demo"}'
+     -d '{
+       "title": "Campeonato Regional de Taekwondo",
+       "type": "torneo-regional",
+       "category": "taekwondo-poomsae", 
+       "location": "Centro Deportivo Nacional",
+       "date": "2024-04-20T10:00:00.000Z"
+     }'
    ```
 
 2. **Verificar inserción en MongoDB:**
@@ -254,9 +295,32 @@ El sistema está configurado para funcionar con las siguientes variables:
 ## Puertos Utilizados
 
 - **UI Angular**: 80
-- **API NodeJS**: 3000
+- **API NodeJS**: 3000  
 - **MongoDB**: 27017
 - **Kafka**: 9092
 - **Zookeeper**: 2181
 
-¡El sistema está completo y listo para usar!
+## Mejoras Implementadas
+
+### Refactorización del Dominio
+- **Antes**: Endpoint `/registrar` para personas con campos `{nombre, descripcion, tipo}`
+- **Después**: Endpoint `/registrar` para torneos con campos `{title, type, category, location, date}`
+- Lógica alineada al dominio de gestión de torneos
+
+### Optimización de Health Checks
+- Reducción de intervalos: 30s → 10s para checks rápidos
+- Timeout optimizado: 10s → 3s  
+- Menor tiempo de arranque: 40s → 15s para API
+- Uso de `wget` en lugar de `curl` para mayor confiabilidad
+
+### Job Consumer Mejorado
+- Compatibilidad con formato nuevo (torneos) y legacy (personas)
+- Mejor logging con campos específicos según el tipo de mensaje
+- Parsing inteligente de mensajes Kafka
+
+### UI Angular Actualizada  
+- Visualización de torneos registrados
+- Integración con endpoint `/fetch-registros`
+- Componentes optimizados para gestión de torneos
+
+¡El sistema está completo y listo para producción!
